@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "6000:5000"
+    volumes:
+      - ./py-src:/app/py-src
+      - ./api-keys.env:/app/api-keys.env
+    env_file:
+      - api-keys.env
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=py-src/app.py
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "6001:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
