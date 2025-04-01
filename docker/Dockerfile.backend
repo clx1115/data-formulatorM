@@ -4,8 +4,10 @@ WORKDIR /app
 
 COPY requirements.txt .
 COPY py-src ./py-src
+COPY pyproject.toml .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -e .
 
 EXPOSE 5000
 
